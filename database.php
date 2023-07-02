@@ -32,6 +32,31 @@ class Database
 			return false;
 		}
 	}
+
+	public function validarLogin($usuario, $password)
+	{
+		$consulta = "SELECT password FROM alumnos WHERE usuario = '$usuario'";
+
+		$result = mysqli_query($this->con, $consulta);
+
+		if ($result->num_rows > 0) {
+			$fila = $result->fetch_assoc();
+			if (strcmp($password, $fila["password"]) == 0)
+				return true;
+			else
+				return false;
+		} else
+			return false;
+	}
+	public function login()
+	{
+		$usuario = $_POST["usuario"];
+		$password = $_POST["password"];
+		if (validarLogin($usuario, $password) == true) {
+			$_SESSION[$usuario] = $usuario;
+			header("location:index.php");
+		}
+	}
 	public function read()
 	{
 		$sql = "SELECT * FROM alumnos";
